@@ -77,24 +77,29 @@ function updateMarkers() {
     }
 
     var position = new google.maps.LatLng(location['lat'], location['lng']);
-    // if (!outOfBoundaries(position)){
-    var marker;
-    if (previousMarker) {
-      marker = createCustomMarker(
-        position,
-        map,
-        'center',
-        previousMarker.getPosition(),
-        position);
-    } else {
-      marker = createCustomMarker(
-        position,
-        map,
-        'center');
+    if (!outOfBoundaries(position)){
+      var marker;
+      if (previousMarker) {
+        marker = createCustomMarker(
+          position,
+          map,
+          'center',
+          previousMarker.getPosition(),
+          position);
+      } else {
+        marker = createCustomMarker(
+          position,
+          map,
+          'center');
+      }
+      markersRecord[id] = marker;
+      markersMap.push(marker)
     }
+    
+    // var markerCluster = new MarkerClusterer(map, markersMap,
+    //   {imagePath: '../images/cluster/m'});
 
-    markersRecord[id] = marker;
-    markersMap.push(marker)
+      
     // }  
   });
 }
@@ -130,6 +135,13 @@ $(document).ready(function () {
   initSVGPath();
   positionCenter = new google.maps.LatLng(lat, lng);
   initMap();
+
+
+      // var markerCluster = new MarkerClusterer(map, markersMap, {imagePath: '../images/m'});
+      // console.log("markerCluster")
+      // console.log(markerCluster)
+
+
   // need to hit the database every 5 seconds and get the new registered vehicles as well as the updated positions for each vehicle
 
   setInterval(hitDatabase, 3000);

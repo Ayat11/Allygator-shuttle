@@ -11,9 +11,9 @@ class Api::VehiclesController < ApplicationController
   def update_location
     @vehicle = Vehicle.find_by(identity: @vehicle_id)
     if @vehicle.present?
-      l = Location.new(lat: @lat, lng: @lng, retrieved_at: @time)
-      l.vehicle = @vehicle
-      l.save 
+      location = Location.new(lat: @lat, lng: @lng, retrieved_at: @time)
+      location.vehicle = @vehicle
+      location.save 
     end
     head :no_content
   end
@@ -26,6 +26,7 @@ class Api::VehiclesController < ApplicationController
   def get_vehicles_updates
     vehicles_hash = {}
     locations = Location.order('vehicle_id, MAX(retrieved_at) DESC').select('DISTINCT on (vehicle_id) vehicle_id, lat, lng, MAX(retrieved_at)').group(:vehicle_id, :lat, :lng)
+    locations = locations.joins(:vehicle)
     if locations.present?
       locations.each do |location|
         vehicles_hash[location.vehicle_id] = location
