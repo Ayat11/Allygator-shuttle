@@ -5,28 +5,37 @@ var positionCenter;
 var vehicleIds = {};
 var markersRecord = {};
 var markersMap = [];
+var svgPath;
 var map;
 
-function createImage(url){
-  var image = {
-    url: url,
-    size: new google.maps.Size(40, 40),
-    origin: new google.maps.Point(0,0),
-    anchor: new google.maps.Point(0, 20)
-  };
-  return image;
-}
 
-function createCustomMarker(coords,map,title){
-  marker = new google.maps.Marker({
+function createCustomMarker(coords, map, title, oldPosition, newPosition) {
+  var markerRotation = null;
+
+  if (oldPosition && newPosition) {
+    markerRotation = google.maps.geometry.spherical.computeHeading(oldPosition, newPosition);
+  }
+
+  var icon = {
+
+    path: svgPath,
+    fillColor: '#FF0000',
+    fillOpacity: .6,
+    anchor: new google.maps.Point(120, 250),
+    strokeWeight: 0,
+    scale: 0.07,
+  }
+  icon.rotation = markerRotation + 90;
+
+  return new google.maps.Marker({
     position: coords,
     map: map,
     title: title,
-    icon: createImage("/assets/car2.png")
+    icon: icon
   });
 }
 
-function createMarker(coords, map, title){
+function createMarker(coords, map, title) {
   var marker = new google.maps.Marker({
     position: coords,
     map: map,
@@ -35,17 +44,6 @@ function createMarker(coords, map, title){
   return marker;
 }
 
-// function createInfoWindow(text){
-//   var infowindow = new google.maps.InfoWindow({
-//     content: text
-//   });
-//   return infowindow;
-// }
-
-// var info = createInfoWindow("Congratulations!");
-// google.maps.event.addListener(marker, 'click', function() {
-//   info.open(map,marker);
-// });
 function initMap() {
   map = new google.maps.Map($('#map-canvas')[0], {
     zoom: 14,
@@ -54,66 +52,85 @@ function initMap() {
   });
 }
 
-function removeMarker(marker){
+function removeMarker(marker) {
   marker.setMap(null);
 }
 
 function clearMarkers() {
-  
+
   for (var i = 0; i < markersMap.length; i++) {
-    markersMap[i].setMap(null);
+    removeMarker(markersMap[i]);
   }
   markersMap = [];
 }
 
-function outOfBoundaries(position){
+function outOfBoundaries(position) {
   return (google.maps.geometry.spherical.computeDistanceBetween(positionCenter, position) > radius);
 }
 
-function updateMarkers(){
-  console.log('markers before ', markersMap)
+function updateMarkers() {
   clearMarkers();
-  console.log('markers after ', markersMap)
   $.each(vehicleIds, function (id, location) {
-    if (id in markersRecord){
+    var previousMarker;
+    if (markersRecord[id]) {
       previousMarker = markersRecord[id];
-      // calculate bearing
     }
-    
+
     var position = new google.maps.LatLng(location['lat'], location['lng']);
     // if (!outOfBoundaries(position)){
-      var marker = createMarker(position, map, 'center');
-      markersRecord[id] = marker;
-      markersMap.push(marker)
+    var marker;
+    if (previousMarker) {
+      marker = createCustomMarker(
+        position,
+        map,
+        'center',
+        previousMarker.getPosition(),
+        position);
+    } else {
+      marker = createCustomMarker(
+        position,
+        map,
+        'center');
+    }
+
+    markersRecord[id] = marker;
+    markersMap.push(marker)
     // }  
   });
 }
 
-function hitDatabase(){
+function hitDatabase() {
   $.ajax({
     type: 'GET',
     url: '/get_vehicles_updates',
-    dataType:'JSON',
-    success: function(data){
-      console.log('hellooooo ', data.vehicles);
+    dataType: 'JSON',
+    success: function (data) {
       vehicleIds = data.vehicles
     },
-    error: function(){
-      console.log('error');
+    error: function () {
+      console.error('error');
     }
   });
- console.log(vehicleIds);
   updateMarkers();
 }
 
+function initSVGPath() {
+  $.ajax({
+    url: '/assets/svg-car.svg',
+    type: 'get',
+    async: false,
+    complete: function (response) {
+      svgPath = response.responseText;
+    }
+  });
+}
 
-$(document).ready(function(){
+
+$(document).ready(function () {
+  initSVGPath();
   positionCenter = new google.maps.LatLng(lat, lng);
   initMap();
   // need to hit the database every 5 seconds and get the new registered vehicles as well as the updated positions for each vehicle
-  
-  setInterval(hitDatabase, 3000);
 
-  // var position = new google.maps.LatLng(lat, lng);
-  // var marker = createCustomMarker(position, map, 'center')
+  setInterval(hitDatabase, 3000);
 });
