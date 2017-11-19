@@ -11,5 +11,12 @@
 require 'rails_helper'
 
 RSpec.describe Vehicle, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  it "is valid with all attributes" do
+    expect(FactoryBot.build(:vehicle)).to be_valid
+  end
+
+  it "is not valid without lat and lng" do
+    vehicle = FactoryBot.build(:vehicle, identity: nil)
+    expect(vehicle).to_not be_valid
+  end
 end

@@ -13,9 +13,11 @@
 
 FactoryBot.define do
   factory :location do
-    lat ""
-    lng ""
-    retrieved_at ""
-    vehicle_id 1
+    lat  FFaker::Geolocation.lat    
+    lng  FFaker::Geolocation.lng    
+    retrieved_at  FFaker::Time.datetime
+    after(:build) do |location|
+      location.vehicle = FactoryBot.create(:vehicle)
+    end
   end
 end

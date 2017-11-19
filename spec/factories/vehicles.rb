@@ -10,6 +10,6 @@
 
 FactoryBot.define do
   factory :vehicle do
-    identity "MyString"
+    identity  FFaker::Identification.drivers_license
   end
 end

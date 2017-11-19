@@ -40,6 +40,7 @@ group :development, :test do
   gem 'rspec-rails', '=3.7.1'
   gem 'simplecov', '0.15.1'
   gem 'database_cleaner', '=1.6.2'
+  gem 'ffaker', '=2.7.0'
 end
 
 group :development do
