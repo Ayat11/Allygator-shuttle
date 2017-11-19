@@ -1,0 +1,12 @@
+default: &defaults
+  server_host: "localhost:3000"
+  API_KEY: AIzaSyBTVRknDYUYCYXW2H4qfrwJAXKkFPOhxnI
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
