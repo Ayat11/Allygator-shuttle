@@ -223,7 +223,7 @@ DEPENDENCIES
   pg (= 0.21.0)
   puma (~> 3.7)
   rails (~> 5.1.4)
-  rails_12factor
+  rails_12factor (= 0.0.3)
   rspec-rails (= 3.7.1)
   sass-rails (~> 5.0)
   simplecov (= 0.15.1)
