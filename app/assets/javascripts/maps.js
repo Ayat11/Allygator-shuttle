@@ -7,6 +7,7 @@ var markersRecord = {};
 var markersMap = [];
 var svgPath;
 var map;
+var markerCluster;
 
 
 function createCustomMarker(coords, map, title, oldPosition, newPosition) {
@@ -29,7 +30,6 @@ function createCustomMarker(coords, map, title, oldPosition, newPosition) {
 
   return new google.maps.Marker({
     position: coords,
-    map: map,
     title: title,
     icon: icon
   });
@@ -38,7 +38,6 @@ function createCustomMarker(coords, map, title, oldPosition, newPosition) {
 function createMarker(coords, map, title) {
   var marker = new google.maps.Marker({
     position: coords,
-    map: map,
     title: title
   });
   return marker;
@@ -57,9 +56,11 @@ function removeMarker(marker) {
 }
 
 function clearMarkers() {
-
   for (var i = 0; i < markersMap.length; i++) {
     removeMarker(markersMap[i]);
+  }
+  if (markerCluster) {
+    markerCluster.clearMarkers();
   }
   markersMap = [];
 }
@@ -77,7 +78,7 @@ function updateMarkers() {
     }
 
     var position = new google.maps.LatLng(location['lat'], location['lng']);
-    if (!outOfBoundaries(position)){
+    if (!outOfBoundaries(position)) {
       var marker;
       if (previousMarker) {
         marker = createCustomMarker(
@@ -95,12 +96,9 @@ function updateMarkers() {
       markersRecord[id] = marker;
       markersMap.push(marker)
     }
-    
-    // var markerCluster = new MarkerClusterer(map, markersMap,
-    //   {imagePath: '../images/cluster/m'});
+    markerCluster.addMarkers(markersMap);
 
-      
-    // }  
+
   });
 }
 
@@ -135,12 +133,7 @@ $(document).ready(function () {
   initSVGPath();
   positionCenter = new google.maps.LatLng(lat, lng);
   initMap();
-
-
-      // var markerCluster = new MarkerClusterer(map, markersMap, {imagePath: '../images/m'});
-      // console.log("markerCluster")
-      // console.log(markerCluster)
-
+  markerCluster = new MarkerClusterer(map, markersMap, { imagePath: '../assets/cluster/m' });
 
   // need to hit the database every 5 seconds and get the new registered vehicles as well as the updated positions for each vehicle
 
