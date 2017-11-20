@@ -2,7 +2,7 @@
 
 ## Description 
 
-Allygator shuttle service written in Rails for the full-stack code Challenge. The Application lets you visualize the location and bearing of all vehicles in real-time.
+Allygator shuttle service written in Rails. The Application lets you visualize the location and bearing of all vehicles in real-time.
 
 ## Requirements
 ```
@@ -131,6 +131,10 @@ function deregisterVehicle(vehicleId) {
 ```sh
 yarn start allygator-shuttle.herokuapp.com:80
 ```
+
+## Simulation video
+- Visit this [link](https://youtu.be/Eqi7gFbgL4I) to view a screen capture for the simulation.
+
 ## Next Tasks
 - Working on making the vehicle movement more smooth.
 - Creating docker container.
