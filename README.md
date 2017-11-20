@@ -127,7 +127,7 @@ function deregisterVehicle(vehicleId) {
 ## Next Tasks
 - Working on making the vehicle movement more smooth.
 - Deploying to Heroku.
-- Adding docker.
+- Creating docker container.
 
 
 ## Screenshots
