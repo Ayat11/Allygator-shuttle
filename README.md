@@ -92,17 +92,17 @@ For getting the latest location for each vehicle.
 
 - Response body
 
-```json
+```sh
 {
   vehicles: {
   1916:
-    {id: null, 
+    {id: 345, 
     lat: "52.45305", 
     lng: "13.4552", 
     retrieved_at: "2017-11-20T01:18:34.816Z", 
     vehicle_id: 1916},
   1917:
-    {id: null, 
+    {id: 346, 
     lat: "52.46234", 
     lng: "13.51446", 
     retrieved_at: "2017-11-20T01:18:34.816Z", 
@@ -124,9 +124,15 @@ function deregisterVehicle(vehicleId) {
 ```
 - The city boundary is too small that most of the vehicles lie outside of it.
 
+## Deployment
+- The app is currently deployed on heroku.
+- visit https://allygator-shuttle.herokuapp.com/
+- Then run the simulator using 
+```sh
+yarn start allygator-shuttle.herokuapp.com:80
+```
 ## Next Tasks
 - Working on making the vehicle movement more smooth.
-- Deploying to Heroku.
 - Creating docker container.
 
 
