@@ -25,7 +25,7 @@ class Api::VehiclesController < ApplicationController
 
   def get_vehicles_updates
     vehicles_hash = {}
-    locations = Location.order('vehicle_id, retrieved_at DESC').select('DISTINCT on (vehicle_id) vehicle_id, lat, lng, retrieved_at').group(:vehicle_id, :lat, :lng, :retrieved_at)
+    locations = Location.order('vehicle_id, retrieved_at DESC').select('DISTINCT on (vehicle_id) vehicle_id, lat, lng, retrieved_at, locations.id').group(:id, :vehicle_id, :lat, :lng, :retrieved_at)
     locations = locations.joins(:vehicle)
     if locations.present?
       locations.each do |location|
