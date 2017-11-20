@@ -64,8 +64,8 @@ For vehicle registration
 
 | Param | Type | Description | |
 | --- | --- | --- | --- |
-| lat | <code>Double</code> | Location latitude |required|
-| lng | <code>Double</code> | Location longitude |required|
+| lat | <code>Decimal</code> | Location latitude |required|
+| lng | <code>Decimal</code> | Location longitude |required|
 | at | <code>Datetime</code> | Time location retrieved at |required|
 
 ```json
